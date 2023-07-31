@@ -1,38 +1,42 @@
-// This is the boilerplate code given for you
-// You can modify this code
-// Product data
-const products = [
-  { id: 1, name: "Product 1", price: 10 },
-  { id: 2, name: "Product 2", price: 20 },
-  { id: 3, name: "Product 3", price: 30 },
-  { id: 4, name: "Product 4", price: 40 },
-  { id: 5, name: "Product 5", price: 50 },
-];
+document.addEventListener("DOMContentLoaded", function () {
+  const products = document.querySelectorAll(".product");
+  const cartItemsContainer = document.querySelector(".cart-items");
 
-// DOM elements
-const productList = document.getElementById("product-list");
+  // Load cart items from session storage
+  let cartItems = JSON.parse(sessionStorage.getItem("cartItems")) || [];
 
-// Render product list
-function renderProducts() {
-  products.forEach((product) => {
-    const li = document.createElement("li");
-    li.innerHTML = `${product.name} - $${product.price} <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>`;
-    productList.appendChild(li);
+  // Function to update the cart items in the DOM
+  function updateCart() {
+    cartItemsContainer.innerHTML = "";
+    cartItems.forEach(item => {
+      const li = document.createElement("li");
+      li.classList.add("cart-item");
+      li.textContent = `Product ${item}`;
+      cartItemsContainer.appendChild(li);
+    });
+  }
+
+  // Function to add a product to the cart
+  function addToCart(productId) {
+    cartItems.push(productId);
+    sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
+    updateCart();
+  }
+
+  // Add click event listeners to all "Add to Cart" buttons
+  products.forEach(product => {
+    const addToCartButton = product.querySelector(".add-to-cart");
+    const productId = product.getAttribute("data-product-id");
+    addToCartButton.addEventListener("click", () => {
+      addToCart(productId);
+    });
   });
-}
 
-// Render cart list
-function renderCart() {}
+  // Initialize the cart on page load
+  updateCart();
+});
+     
 
-// Add item to cart
-function addToCart(productId) {}
+    
 
-// Remove item from cart
-function removeFromCart(productId) {}
 
-// Clear cart
-function clearCart() {}
-
-// Initial render
-renderProducts();
-renderCart();
